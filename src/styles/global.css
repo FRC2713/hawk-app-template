@@ -1,11 +1,16 @@
 /* Self-hosted because Hawk apps must also work on a LAN without font CDNs. */
 @import "@fontsource-variable/inter/index.css";
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-@theme {
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
   --font-sans:
     "Inter Variable", Inter, ui-sans-serif, system-ui, -apple-system,
     BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-heading: var(--font-sans);
 
   /* Core Hawk Shop palette. See docs/BRANDING.md. */
   --color-hawk-red: #bd0029;
@@ -14,128 +19,92 @@
   --color-hawk-cool-grey: #97999b;
   --color-hawk-warm-grey: #a3a19e;
 
-  /* Accessible semantic roles derived from the core palette. */
-  --color-ink: #171717;
-  --color-muted: #525456;
-  --color-canvas: #f7f7f7;
-  --color-panel: #ffffff;
-  --color-line: #d6d7d8;
-  --color-brand: #bd0029;
-  --color-brand-strong: #920020;
-  --color-brand-soft: #fff1f4;
-  --color-brand-line: #edafbd;
-  --color-danger: #bd0029;
-  --color-danger-strong: #7d001b;
-  --color-danger-soft: #fff1f4;
-  --color-danger-line: #edafbd;
+  /* shadcn semantic roles, adapted to the Hawk palette. */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Operational states use dedicated semantic colors, never brand colors. */
+  --color-success: #ecfdf3;
+  --color-success-foreground: #14532d;
+  --color-success-border: #a7f3d0;
+  --color-status-planned: #f1f5f9;
+  --color-status-planned-foreground: #334155;
+  --color-status-active: #eff6ff;
+  --color-status-active-foreground: #1e40af;
+  --color-status-done: #ecfdf3;
+  --color-status-done-foreground: #166534;
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  --background: #f7f7f7;
+  --foreground: #171717;
+  --card: #ffffff;
+  --card-foreground: #171717;
+  --popover: #ffffff;
+  --popover-foreground: #171717;
+  --primary: #bd0029;
+  --primary-foreground: #ffffff;
+  --secondary: #eeeeef;
+  --secondary-foreground: #292a2b;
+  --muted: #eeeeef;
+  --muted-foreground: #525456;
+  --accent: #fff1f4;
+  --accent-foreground: #7d001b;
+  --destructive: #bd0029;
+  --border: #d6d7d8;
+  --input: #c5c7c8;
+  --ring: #bd0029;
+  --radius: 0.5rem;
 }
 
 @layer base {
   * {
-    border-color: var(--color-line);
+    @apply border-border outline-ring/50;
   }
 
   html {
     min-width: 320px;
-    background: var(--color-canvas);
-    color: var(--color-ink);
     font-family: var(--font-sans);
   }
 
   body {
     min-height: 100vh;
     margin: 0;
+    @apply bg-background text-foreground;
   }
 
-  :focus-visible {
-    outline: 3px solid color-mix(in srgb, var(--color-brand) 45%, transparent);
+  /* shadcn controls provide their own ring; keep ordinary links visible too. */
+  a:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--primary) 45%, transparent);
     outline-offset: 2px;
   }
-}
 
-@layer components {
-  .button {
-    display: inline-flex;
-    min-height: 2.5rem;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    border-radius: 0.6rem;
-    border: 1px solid transparent;
-    padding: 0.55rem 0.9rem;
-    font-size: 0.875rem;
-    font-weight: 650;
-    line-height: 1.2;
-    text-decoration: none;
-    transition:
-      background-color 120ms ease,
-      border-color 120ms ease,
-      color 120ms ease;
-  }
-
-  .button-primary {
-    background: var(--color-brand);
-    color: white;
-  }
-
-  .button-primary:hover {
-    background: var(--color-brand-strong);
-  }
-
-  .button-secondary {
-    border-color: var(--color-line);
-    background: white;
-    color: var(--color-ink);
-  }
-
-  .button-secondary:hover {
-    background: #f8fafc;
-  }
-
-  .button-danger {
-    border-color: var(--color-danger-line);
-    background: var(--color-danger-soft);
-    color: var(--color-danger-strong);
-  }
-
-  .button-danger:hover {
-    background: #ffe2e8;
-  }
-
-  .field {
-    display: grid;
-    gap: 0.45rem;
-  }
-
-  .field-label {
-    font-size: 0.875rem;
-    font-weight: 650;
-  }
-
-  .field-hint,
-  .field-error {
-    font-size: 0.8rem;
-  }
-
-  .field-hint {
-    color: var(--color-muted);
-  }
-
-  .field-error {
-    color: var(--color-danger);
-  }
-
-  .input {
-    min-height: 2.65rem;
-    width: 100%;
-    border: 1px solid var(--color-line);
-    border-radius: 0.6rem;
-    background: white;
-    padding: 0.6rem 0.75rem;
-    color: var(--color-ink);
-  }
-
-  .input[aria-invalid="true"] {
-    border-color: var(--color-danger);
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
   }
 }

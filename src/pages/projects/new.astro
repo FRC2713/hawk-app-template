@@ -1,7 +1,12 @@
 ---
 import { actions } from "astro:actions";
 import { ProjectForm } from "../../components/islands/ProjectForm.js";
-import Alert from "../../components/ui/Alert.astro";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "../../components/ui/alert.js";
+import { Card, CardContent } from "../../components/ui/card.js";
 import AppLayout from "../../layouts/AppLayout.astro";
 
 const result = Astro.getActionResult(actions.createProject);
@@ -13,23 +18,28 @@ if (result?.data?.id) {
 <AppLayout title="New project">
   <a
     href="/"
-    class="text-sm font-semibold text-muted no-underline hover:text-ink"
+    class="text-sm font-semibold text-muted-foreground no-underline hover:text-foreground"
     >← Projects</a
   >
   <div class="mt-5 max-w-2xl">
     <h1 class="text-3xl font-bold tracking-tight">Create a project</h1>
-    <p class="mt-2 text-muted">
+    <p class="mt-2 text-muted-foreground">
       This writes through a validated Astro Action into local SQLite.
     </p>
     {
       result?.error && (
         <div class="mt-6">
-          <Alert tone="error">{result.error.message}</Alert>
+          <Alert variant="destructive">
+            <AlertTitle>Could not create the project</AlertTitle>
+            <AlertDescription>{result.error.message}</AlertDescription>
+          </Alert>
         </div>
       )
     }
-    <div class="mt-8 rounded-2xl border bg-white p-6 shadow-sm sm:p-8">
-      <ProjectForm client:load mode="create" />
-    </div>
+    <Card className="mt-8 py-6 sm:py-8">
+      <CardContent>
+        <ProjectForm client:load mode="create" />
+      </CardContent>
+    </Card>
   </div>
 </AppLayout>

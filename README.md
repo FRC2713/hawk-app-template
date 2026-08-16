@@ -38,7 +38,7 @@ Local data is stored in `data/app.db` and ignored by Git. This is local-data-fir
 - Node.js 24, npm, strict TypeScript
 - Astro 7 server-rendered pages and Actions
 - React 19 only for interactive leaf widgets
-- Tailwind CSS 4 with a small checked-in component style layer
+- Tailwind CSS 4 with curated, source-owned shadcn/ui components
 - Hawk Shop-derived branding with locally bundled Inter Variable
 - SQLite through `better-sqlite3`, with ordered SQL migrations
 - Vitest and Playwright

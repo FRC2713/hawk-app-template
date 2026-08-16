@@ -1,6 +1,18 @@
 import { withState } from "@astrojs/react/actions";
 import { actions } from "astro:actions";
-import { useActionState, useEffect, useRef } from "react";
+import { useActionState, useEffect } from "react";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 
 export function DeleteProjectDialog({
   id,
@@ -9,7 +21,6 @@ export function DeleteProjectDialog({
   id: number;
   name: string;
 }) {
-  const dialog = useRef<HTMLDialogElement>(null);
   const [state, formAction, pending] = useActionState(
     withState(actions.deleteProject),
     { data: undefined, error: undefined } as unknown as Awaited<
@@ -22,50 +33,33 @@ export function DeleteProjectDialog({
   }, [state.data]);
 
   return (
-    <>
-      <button
-        className="button button-danger"
-        type="button"
-        onClick={() => dialog.current?.showModal()}
-      >
+    <AlertDialog>
+      <AlertDialogTrigger render={<Button variant="destructive" />}>
         Delete project
-      </button>
-      <dialog
-        ref={dialog}
-        className="m-auto w-[min(28rem,calc(100%-2rem))] rounded-2xl border bg-white p-0 shadow-2xl backdrop:bg-slate-950/40"
-      >
-        <div className="p-6">
-          <h2 className="text-lg font-semibold">Delete {name}?</h2>
-          <p className="mt-2 text-sm text-muted">
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Delete {name}?</AlertDialogTitle>
+          <AlertDialogDescription>
             This permanently removes the project from the local database.
-          </p>
-          {state.error && (
-            <p className="mt-4 text-sm text-danger-strong" role="alert">
-              {state.error.message}
-            </p>
-          )}
-          <form
-            action={formAction}
-            className="mt-6 flex flex-wrap justify-end gap-3"
-          >
-            <input type="hidden" name="id" value={id} />
-            <button
-              className="button button-secondary"
-              type="button"
-              onClick={() => dialog.current?.close()}
-            >
-              Cancel
-            </button>
-            <button
-              className="button button-danger"
-              disabled={pending}
-              type="submit"
-            >
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        {state.error && (
+          <Alert variant="destructive">
+            <AlertTitle>Could not delete the project</AlertTitle>
+            <AlertDescription>{state.error.message}</AlertDescription>
+          </Alert>
+        )}
+        <form action={formAction}>
+          <input type="hidden" name="id" value={id} />
+          <AlertDialogFooter>
+            <AlertDialogCancel type="button">Cancel</AlertDialogCancel>
+            <Button variant="destructive" disabled={pending} type="submit">
               {pending ? "Deleting…" : "Delete"}
-            </button>
-          </form>
-        </div>
-      </dialog>
-    </>
+            </Button>
+          </AlertDialogFooter>
+        </form>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }

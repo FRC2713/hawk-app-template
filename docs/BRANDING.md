@@ -41,9 +41,11 @@ Operational states may use conventional green, amber, blue, and red where meanin
 - Build calm, practical internal tools: white panels, quiet neutral backgrounds, clear borders, compact controls, and restrained shadows.
 - Use Hawk red for the primary action or current location, not for every heading and decoration.
 - Default corner radius is `0.5rem`; dialogs and large cards may be slightly rounder when consistent with nearby elements.
-- Use source-owned components in `src/components/ui/`. Do not add an arbitrary component registry or a second design system.
+- shadcn/ui is the template's design system. Its configuration lives in `components.json`, with the Vega style, Base UI primitives, and Lucide icons.
+- shadcn components are source-owned files in `src/components/ui/`, not a black-box component package. Prefer the checked-in components and change them when Hawk behavior or accessibility requires it.
+- Add only a component required by the current feature with `npm run ui:add -- <name>`. Use the official shadcn registry only; do not add community registries or a second design system.
 - Follow the existing button, field, alert, empty-state, card, and dialog patterns before creating variants.
-- Icons should be simple line icons with an accessible label when they act as controls. Do not mix multiple icon styles.
+- Use Lucide for simple line icons. Give icon-only controls an accessible label and do not mix icon libraries.
 
 ## Themes
 

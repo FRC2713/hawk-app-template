@@ -2,8 +2,8 @@ import { expect, test } from "@playwright/test";
 
 test("a user can create, edit, filter, and delete a project", async ({
   page,
-}) => {
-  const name = `Browser project ${Date.now()}`;
+}, testInfo) => {
+  const name = `Browser project ${testInfo.project.name} ${crypto.randomUUID()}`;
 
   await page.goto("/");
   await page.getByRole("link", { name: "New project" }).click();
@@ -31,7 +31,7 @@ test("a user can create, edit, filter, and delete a project", async ({
   await page.getByRole("link", { name: new RegExp(name) }).click();
   await page.getByRole("button", { name: "Delete project" }).click();
   await page
-    .getByRole("dialog")
+    .getByRole("alertdialog")
     .getByRole("button", { name: "Delete" })
     .click();
   await expect(page.getByRole("status")).toContainText("deleted");

@@ -1,8 +1,15 @@
 ---
 import { actions } from "astro:actions";
 import { DeleteProjectDialog } from "../../components/islands/DeleteProjectDialog.js";
-import Alert from "../../components/ui/Alert.astro";
-import StatusBadge from "../../components/ui/StatusBadge.astro";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "../../components/ui/alert.js";
+import { buttonVariants } from "../../components/ui/button.js";
+import { Card, CardContent, CardHeader } from "../../components/ui/card.js";
+import { Separator } from "../../components/ui/separator.js";
+import { StatusBadge } from "../../components/ui/status-badge.js";
 import AppLayout from "../../layouts/AppLayout.astro";
 import { getProject } from "../../server/projects.js";
 
@@ -22,62 +29,75 @@ const updated = Astro.url.searchParams.get("updated") === "1";
 >
   <a
     href="/"
-    class="text-sm font-semibold text-muted no-underline hover:text-ink"
+    class="text-sm font-semibold text-muted-foreground no-underline hover:text-foreground"
     >← Projects</a
   >
 
   {
     (created || updated) && (
       <div class="mt-6">
-        <Alert tone="success">Project {created ? "created" : "updated"}.</Alert>
+        <Alert variant="success" role="status">
+          <AlertTitle>Project {created ? "created" : "updated"}</AlertTitle>
+          <AlertDescription>Your changes were saved.</AlertDescription>
+        </Alert>
       </div>
     )
   }
   {
     deleteResult?.error && (
       <div class="mt-6">
-        <Alert tone="error">{deleteResult.error.message}</Alert>
+        <Alert variant="destructive">
+          <AlertTitle>Could not delete the project</AlertTitle>
+          <AlertDescription>{deleteResult.error.message}</AlertDescription>
+        </Alert>
       </div>
     )
   }
 
-  <article class="mt-6 rounded-2xl border bg-white p-6 shadow-sm sm:p-8">
-    <div
-      class="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between"
+  <Card className="mt-6 py-6 sm:py-8">
+    <CardHeader
+      className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between"
     >
       <div>
         <StatusBadge status={project.status} />
         <h1 class="mt-4 text-3xl font-bold tracking-tight">{project.name}</h1>
       </div>
-      <a class="button button-secondary" href={`/projects/${project.id}/edit`}
-        >Edit project</a
+      <a
+        class={buttonVariants({ variant: "outline" })}
+        href={`/projects/${project.id}/edit`}>Edit project</a
       >
-    </div>
+    </CardHeader>
 
-    <div class="mt-8 border-t pt-8">
-      <h2 class="text-sm font-semibold uppercase tracking-[0.14em] text-muted">
-        Description
-      </h2>
-      <p class="mt-3 whitespace-pre-wrap leading-7 text-ink">
-        {project.description || "No description yet."}
-      </p>
-    </div>
-
-    <dl class="mt-8 grid gap-4 border-t pt-8 text-sm sm:grid-cols-2">
+    <CardContent className="gap-8">
+      <Separator />
       <div>
-        <dt class="font-semibold text-muted">Created</dt>
-        <dd class="mt-1">{new Date(project.createdAt).toLocaleString()}</dd>
+        <h2
+          class="text-sm font-semibold uppercase tracking-[0.14em] text-muted-foreground"
+        >
+          Description
+        </h2>
+        <p class="mt-3 whitespace-pre-wrap leading-7 text-foreground">
+          {project.description || "No description yet."}
+        </p>
       </div>
-      <div>
-        <dt class="font-semibold text-muted">Last updated</dt>
-        <dd class="mt-1">{new Date(project.updatedAt).toLocaleString()}</dd>
-      </div>
-    </dl>
-  </article>
 
-  <section class="mt-8 rounded-2xl border border-danger-line bg-white p-6">
+      <Separator />
+      <dl class="grid gap-4 text-sm sm:grid-cols-2">
+        <div>
+          <dt class="font-semibold text-muted-foreground">Created</dt>
+          <dd class="mt-1">{new Date(project.createdAt).toLocaleString()}</dd>
+        </div>
+        <div>
+          <dt class="font-semibold text-muted-foreground">Last updated</dt>
+          <dd class="mt-1">{new Date(project.updatedAt).toLocaleString()}</dd>
+        </div>
+      </dl>
+    </CardContent>
+  </Card>
+
+  <section class="mt-8 rounded-xl border border-destructive/30 bg-card p-6">
     <h2 class="font-semibold">Danger zone</h2>
-    <p class="mt-1 text-sm text-muted">Deletion cannot be undone.</p>
+    <p class="mt-1 text-sm text-muted-foreground">Deletion cannot be undone.</p>
     <div class="mt-4">
       <DeleteProjectDialog client:load id={project.id} name={project.name} />
     </div>

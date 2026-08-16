@@ -23,23 +23,30 @@ const {
     <title>{title} · Hawk App</title>
   </head>
   <body>
-    <header class="border-b bg-white">
+    <header class="border-b bg-card">
       <div
         class="mx-auto flex max-w-5xl items-center justify-between px-5 py-4"
       >
-        <a href="/" class="flex items-center gap-3 text-ink no-underline">
+        <a
+          href="/"
+          class="flex items-center gap-3 text-foreground no-underline"
+        >
           <span
             aria-hidden="true"
-            class="grid size-9 place-items-center rounded-xl bg-brand font-bold text-white"
+            class="grid size-9 place-items-center rounded-lg bg-primary font-bold text-primary-foreground"
             >H</span
           >
           <span>
             <strong class="block text-sm leading-tight">Hawk App</strong>
-            <span class="block text-xs text-muted">Local-first starter</span>
+            <span class="block text-xs text-muted-foreground"
+              >Local-first starter</span
+            >
           </span>
         </a>
         <nav aria-label="Main navigation">
-          <a href="/" class="text-sm font-semibold text-muted hover:text-ink"
+          <a
+            href="/"
+            class="text-sm font-semibold text-muted-foreground hover:text-foreground"
             >Projects</a
           >
         </nav>
@@ -48,7 +55,7 @@ const {
     <main class="mx-auto w-full max-w-5xl px-5 py-8 sm:py-12">
       <slot />
     </main>
-    <footer class="mx-auto max-w-5xl px-5 py-8 text-xs text-muted">
+    <footer class="mx-auto max-w-5xl px-5 py-8 text-xs text-muted-foreground">
       Replace this example with your application. Start with <code
         >START_HERE.md</code
       >.

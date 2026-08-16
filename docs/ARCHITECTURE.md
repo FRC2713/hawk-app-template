@@ -17,7 +17,7 @@ This shape minimizes duplicated client/server contracts and works both on a lapt
 - Server-rendered forms are the default because they work before JavaScript loads and keep mutations close to validation.
 - Raw, parameterized SQL and checked-in migrations keep the data model visible. An ORM is not needed for this scale.
 - SQLite is correct for one running application instance. Move to Postgres only when concurrent instances, external reporting, or a separate web client creates a real need.
-- Tailwind supplies design tokens and layout utilities. The reusable UI source stays in this repo; arbitrary component registries are not a dependency.
+- Tailwind supplies design tokens and layout utilities. A curated shadcn/ui layer supplies source-owned primitives configured in `components.json`; add official components only as a feature needs them.
 - Authentication is not embedded. Hawk Suite will terminate public access and provide a documented identity contract. Authorization still belongs in server actions and routes.
 
 ## Adding a feature

@@ -1,6 +1,15 @@
 import { withState } from "@astrojs/react/actions";
 import { actions } from "astro:actions";
 import { useActionState, useEffect } from "react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  NativeSelect,
+  NativeSelectOption,
+} from "@/components/ui/native-select";
+import { Textarea } from "@/components/ui/textarea";
 import type { Project, ProjectStatus } from "../../server/projects.js";
 
 type Props =
@@ -99,19 +108,14 @@ function Fields({
     <form action={formAction} className="grid gap-6">
       {project && <input type="hidden" name="id" value={project.id} />}
       {errorMessage(error) && (
-        <div
-          className="rounded-xl border border-danger-line bg-danger-soft px-4 py-3 text-sm text-danger-strong"
-          role="alert"
-        >
-          {errorMessage(error)}
-        </div>
+        <Alert variant="destructive">
+          <AlertTitle>Could not save the project</AlertTitle>
+          <AlertDescription>{errorMessage(error)}</AlertDescription>
+        </Alert>
       )}
-      <div className="field">
-        <label className="field-label" htmlFor="name">
-          Project name
-        </label>
-        <input
-          className="input"
+      <div className="grid gap-2">
+        <Label htmlFor="name">Project name</Label>
+        <Input
           id="name"
           name="name"
           defaultValue={project?.name}
@@ -121,17 +125,15 @@ function Fields({
           aria-describedby={nameError ? "name-error" : undefined}
         />
         {nameError && (
-          <span className="field-error" id="name-error">
+          <span className="text-sm text-destructive" id="name-error">
             {nameError}
           </span>
         )}
       </div>
-      <div className="field">
-        <label className="field-label" htmlFor="description">
-          Description
-        </label>
-        <textarea
-          className="input min-h-32 resize-y"
+      <div className="grid gap-2">
+        <Label htmlFor="description">Description</Label>
+        <Textarea
+          className="min-h-32 resize-y"
           id="description"
           name="description"
           defaultValue={project?.description}
@@ -141,46 +143,40 @@ function Fields({
             descriptionError ? "description-error" : "description-hint"
           }
         />
-        <span className="field-hint" id="description-hint">
+        <span className="text-sm text-muted-foreground" id="description-hint">
           Optional, up to 2,000 characters.
         </span>
         {descriptionError && (
-          <span className="field-error" id="description-error">
+          <span className="text-sm text-destructive" id="description-error">
             {descriptionError}
           </span>
         )}
       </div>
-      <div className="field">
-        <label className="field-label" htmlFor="status">
-          Status
-        </label>
-        <select
-          className="input"
+      <div className="grid gap-2">
+        <Label htmlFor="status">Status</Label>
+        <NativeSelect
+          className="w-full"
           id="status"
           name="status"
           defaultValue={project?.status ?? "planned"}
         >
           {statuses.map((status) => (
-            <option value={status.value} key={status.value}>
+            <NativeSelectOption value={status.value} key={status.value}>
               {status.label}
-            </option>
+            </NativeSelectOption>
           ))}
-        </select>
+        </NativeSelect>
       </div>
       <div className="flex flex-wrap gap-3 border-t pt-6">
-        <button
-          className="button button-primary"
-          disabled={pending}
-          type="submit"
-        >
+        <Button disabled={pending} type="submit">
           {pending
             ? "Saving…"
             : mode === "create"
               ? "Create project"
               : "Save changes"}
-        </button>
+        </Button>
         <a
-          className="button button-secondary"
+          className={buttonVariants({ variant: "outline" })}
           href={project ? `/projects/${project.id}` : "/"}
         >
           Cancel

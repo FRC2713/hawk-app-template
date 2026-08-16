@@ -15,6 +15,7 @@ This repository is intentionally narrow. Preserve its simplicity for a novice op
 - Use Astro Actions for app-owned form mutations. Every action validates input and enforces any applicable authorization.
 - Use React only for a contained interactive leaf in `src/components/islands/`. Do not split one workflow across multiple islands.
 - Follow `docs/BRANDING.md`. Use semantic tokens and existing source-owned UI patterns; do not invent product colors, logos, fonts, or voice conventions.
+- Use the checked-in shadcn/ui components in `src/components/ui/` before writing a new primitive. Add only the official component needed with `npm run ui:add -- <name>`, then adapt it to the Hawk semantic tokens. Do not install another design system or a third-party shadcn registry.
 - Keep SQL in `src/server/` repositories. Pages and actions call repository functions.
 - Change the schema only by adding an ordered `migrations/NNNN_name.sql` file. Never edit an applied migration.
 - Store durable state beneath `DATA_DIR`; production mounts it at `/data`.
@@ -26,7 +27,7 @@ This repository is intentionally narrow. Preserve its simplicity for a novice op
 - `src/pages/`: routes and request rendering
 - `src/actions/`: validated mutations
 - `src/server/`: configuration, database, repositories, logging
-- `src/components/ui/`: reusable Astro presentation
+- `src/components/ui/`: source-owned shadcn primitives and app compositions
 - `src/components/islands/`: exceptional interactive React widgets
 - `migrations/`: immutable, ordered SQL
 - `docs/features/`: behavior and acceptance examples
