@@ -1,0 +1,35 @@
+---
+import { actions } from "astro:actions";
+import { ProjectForm } from "../../components/islands/ProjectForm.js";
+import Alert from "../../components/ui/Alert.astro";
+import AppLayout from "../../layouts/AppLayout.astro";
+
+const result = Astro.getActionResult(actions.createProject);
+if (result?.data?.id) {
+  return Astro.redirect(`/projects/${result.data.id}?created=1`, 303);
+}
+---
+
+<AppLayout title="New project">
+  <a
+    href="/"
+    class="text-sm font-semibold text-muted no-underline hover:text-ink"
+    >← Projects</a
+  >
+  <div class="mt-5 max-w-2xl">
+    <h1 class="text-3xl font-bold tracking-tight">Create a project</h1>
+    <p class="mt-2 text-muted">
+      This writes through a validated Astro Action into local SQLite.
+    </p>
+    {
+      result?.error && (
+        <div class="mt-6">
+          <Alert tone="error">{result.error.message}</Alert>
+        </div>
+      )
+    }
+    <div class="mt-8 rounded-2xl border bg-white p-6 shadow-sm sm:p-8">
+      <ProjectForm client:load mode="create" />
+    </div>
+  </div>
+</AppLayout>

@@ -1,0 +1,108 @@
+---
+import EmptyState from "../components/ui/EmptyState.astro";
+import StatusBadge from "../components/ui/StatusBadge.astro";
+import AppLayout from "../layouts/AppLayout.astro";
+import {
+  listProjects,
+  PROJECT_STATUSES,
+  type ProjectStatus,
+} from "../server/projects.js";
+
+const requestedStatus = Astro.url.searchParams.get("status");
+const status = PROJECT_STATUSES.includes(requestedStatus as ProjectStatus)
+  ? (requestedStatus as ProjectStatus)
+  : undefined;
+const projects = listProjects(status);
+const deleted = Astro.url.searchParams.get("deleted") === "1";
+const filters: Array<{ label: string; value?: ProjectStatus }> = [
+  { label: "All" },
+  { label: "Planned", value: "planned" },
+  { label: "Active", value: "active" },
+  { label: "Done", value: "done" },
+];
+---
+
+<AppLayout title="Projects">
+  <div class="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+    <div>
+      <p class="text-sm font-semibold uppercase tracking-[0.16em] text-brand">
+        Reference feature
+      </p>
+      <h1 class="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
+        Projects
+      </h1>
+      <p class="mt-2 max-w-2xl text-muted">
+        A complete example of pages, Actions, validation, SQLite, and responsive
+        UI.
+      </p>
+    </div>
+    <a class="button button-primary shrink-0" href="/projects/new"
+      >New project</a
+    >
+  </div>
+
+  {
+    deleted && (
+      <div
+        class="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900"
+        role="status"
+      >
+        Project deleted.
+      </div>
+    )
+  }
+
+  <nav class="mt-8 flex flex-wrap gap-2" aria-label="Filter projects">
+    {
+      filters.map((filter) => (
+        <a
+          href={filter.value ? `/?status=${filter.value}` : "/"}
+          aria-current={status === filter.value ? "page" : undefined}
+          class:list={[
+            "rounded-full border px-3 py-1.5 text-sm font-semibold no-underline",
+            status === filter.value
+              ? "border-brand bg-brand text-white"
+              : "bg-white text-muted hover:text-ink",
+          ]}
+        >
+          {filter.label}
+        </a>
+      ))
+    }
+  </nav>
+
+  <section class="mt-6" aria-label="Project list">
+    {
+      projects.length === 0 ? (
+        <EmptyState />
+      ) : (
+        <div class="grid gap-4 sm:grid-cols-2">
+          {projects.map((project) => (
+            <a
+              class="group rounded-2xl border bg-white p-5 text-ink no-underline shadow-sm transition hover:-translate-y-0.5 hover:border-brand-line hover:shadow-md"
+              href={`/projects/${project.id}`}
+            >
+              <div class="flex items-start justify-between gap-4">
+                <h2 class="font-semibold group-hover:text-brand">
+                  {project.name}
+                </h2>
+                <StatusBadge status={project.status} />
+              </div>
+              <p class="mt-3 line-clamp-3 min-h-10 text-sm leading-6 text-muted">
+                {project.description || "No description yet."}
+              </p>
+              <p class="mt-5 text-xs text-muted">
+                Updated{" "}
+                {new Date(project.updatedAt).toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                })}
+              </p>
+            </a>
+          ))}
+        </div>
+      )
+    }
+  </section>
+</AppLayout>

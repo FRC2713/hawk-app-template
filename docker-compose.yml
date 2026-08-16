@@ -1,0 +1,15 @@
+services:
+  app:
+    build: .
+    environment:
+      DATA_DIR: /data
+      HOST: 0.0.0.0
+      PORT: "3000"
+    ports:
+      - "127.0.0.1:3000:3000"
+    volumes:
+      - app-data:/data
+    restart: unless-stopped
+
+volumes:
+  app-data:

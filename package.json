@@ -1,0 +1,54 @@
+{
+  "name": "hawk-app-template",
+  "private": true,
+  "type": "module",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "dev": "npm run db:migrate && npm run db:seed && astro dev",
+    "build": "astro build",
+    "start": "npm run db:migrate && node dist/server/entry.mjs",
+    "preview": "npm run build && astro preview",
+    "astro": "astro",
+    "doctor": "node scripts/doctor.mjs",
+    "db:migrate": "tsx scripts/migrate.ts",
+    "db:seed": "tsx scripts/seed.ts",
+    "db:backup": "tsx scripts/backup.ts",
+    "typecheck": "astro check",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "test:ui": "playwright test",
+    "check": "npm run format:check && npm run typecheck && npm test && npm run build",
+    "verify": "npm run check && npm run test:ui"
+  },
+  "dependencies": {
+    "@astrojs/node": "^11.1.2",
+    "@astrojs/react": "^6.0.2",
+    "@fontsource-variable/inter": "^5.3.0",
+    "@tailwindcss/vite": "^4.3.3",
+    "astro": "^7.2.2",
+    "better-sqlite3": "^13.0.3",
+    "clsx": "^2.1.1",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "tailwind-merge": "^3.6.0",
+    "tailwindcss": "^4.3.3",
+    "tsx": "^4.23.12",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@playwright/test": "^1.62.1",
+    "@types/better-sqlite3": "^9.6.0",
+    "@types/node": "^24.13.3",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "prettier": "^3.9.6",
+    "prettier-plugin-astro": "^0.14.1",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.10"
+  }
+}

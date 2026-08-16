@@ -1,0 +1,47 @@
+name: Verify
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+
+  browser:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:ui
+
+  container:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build --tag hawk-app-template:test .
+      - run: docker run --detach --name hawk-app-template --publish 127.0.0.1:3000:3000 hawk-app-template:test
+      - run: |
+          for attempt in {1..30}; do
+            curl --fail --silent http://127.0.0.1:3000/health && exit 0
+            sleep 2
+          done
+          docker logs hawk-app-template
+          exit 1

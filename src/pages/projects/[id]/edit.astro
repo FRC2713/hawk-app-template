@@ -1,0 +1,42 @@
+---
+import { actions } from "astro:actions";
+import { ProjectForm } from "../../../components/islands/ProjectForm.js";
+import Alert from "../../../components/ui/Alert.astro";
+import AppLayout from "../../../layouts/AppLayout.astro";
+import { getProject } from "../../../server/projects.js";
+
+const id = Number(Astro.params.id);
+const project = Number.isSafeInteger(id) && id > 0 ? getProject(id) : undefined;
+if (!project) return new Response("Project not found", { status: 404 });
+
+const result = Astro.getActionResult(actions.updateProject);
+if (result?.data?.id) {
+  return Astro.redirect(`/projects/${result.data.id}?updated=1`, 303);
+}
+---
+
+<AppLayout title={`Edit ${project.name}`}>
+  <a
+    href={`/projects/${project.id}`}
+    class="text-sm font-semibold text-muted no-underline hover:text-ink"
+  >
+    ← {project.name}
+  </a>
+  <div class="mt-5 max-w-2xl">
+    <h1 class="text-3xl font-bold tracking-tight">Edit project</h1>
+    <p class="mt-2 text-muted">
+      The same Action and repository paths serve enhanced and no-JavaScript
+      submissions.
+    </p>
+    {
+      result?.error && (
+        <div class="mt-6">
+          <Alert tone="error">{result.error.message}</Alert>
+        </div>
+      )
+    }
+    <div class="mt-8 rounded-2xl border bg-white p-6 shadow-sm sm:p-8">
+      <ProjectForm client:load mode="update" project={project} />
+    </div>
+  </div>
+</AppLayout>

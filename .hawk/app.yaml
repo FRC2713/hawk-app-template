@@ -1,0 +1,21 @@
+version: 1
+id: hawk-app-template
+displayName: Hawk App Template
+image: ghcr.io/OWNER/REPOSITORY@sha256:REPLACE_WITH_IMMUTABLE_DIGEST
+containerPort: 3000
+healthPath: /health
+hostname: app-template
+replicas: 1
+auth:
+  mode: hawk-suite-proxy
+  identityContract: required-before-enabling-authorization
+persistence:
+  - name: data
+    mountPath: /data
+environment:
+  DATA_DIR: /data
+  PORT: "3000"
+  HOST: 0.0.0.0
+  LOG_LEVEL: info
+migrations:
+  mode: before-server-start
