@@ -22,14 +22,15 @@ Open <http://localhost:3000>. The app needs no account, cloud service, or secret
 
 ## Useful commands
 
-| Command                     | Purpose                                        |
-| --------------------------- | ---------------------------------------------- |
-| `npm run dev`               | Migrate, add sample data, and start the app    |
-| `npm run doctor`            | Explain local setup problems in plain language |
-| `npm run check`             | Format-check, type-check, test, and build      |
-| `npm run verify`            | Run every check, including browser flows       |
-| `npm run db:backup`         | Save a timestamped SQLite backup               |
-| `docker compose up --build` | Run production-like in Docker                  |
+| Command                     | Purpose                                            |
+| --------------------------- | -------------------------------------------------- |
+| `npm run dev`               | Migrate, add sample data, and start the app        |
+| `npm run doctor`            | Explain local setup problems in plain language     |
+| `npm run check:render`      | Check the running app really renders, not just 200 |
+| `npm run check`             | Format-check, type-check, test, and build          |
+| `npm run verify`            | Run every check, including browser flows           |
+| `npm run db:backup`         | Save a timestamped SQLite backup                   |
+| `docker compose up --build` | Run production-like in Docker                      |
 
 Local data is stored in `data/app.db` and ignored by Git. This is local-data-first, not an offline-sync architecture: the browser still connects to the running server.
 

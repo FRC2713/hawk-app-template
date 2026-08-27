@@ -40,6 +40,7 @@ This repository is intentionally narrow. Preserve its simplicity for a novice op
 - Keyboard, labels, focus, empty states, and mobile layout are considered.
 - Tests cover domain/repository behavior and critical browser journeys.
 - `npm run check` passes. Run `npm run verify` for user-flow or deployment changes.
+- Anything that changes what a page looks like is confirmed against the _running dev server_ with `npm run check:render`, not just `npm run check`. `check` and the browser tests build for production; the dev server is what a person actually opens, and the two can disagree.
 - Documentation and `.env.example` match runtime behavior.
 - Summarize changed files and checks; never commit unless the user explicitly asks.
 

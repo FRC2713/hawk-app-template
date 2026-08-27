@@ -73,25 +73,40 @@ try {
   problems.push(`The data directory is not writable: ${dataDirectory}`);
 }
 
+/** Is the thing holding the port our own app, rather than an unrelated program? */
+async function thisAppIsListening(port) {
+  try {
+    const response = await fetch(`http://127.0.0.1:${port}/health`, {
+      signal: AbortSignal.timeout(2000),
+    });
+    return (await response.text()).includes('"ok"');
+  } catch {
+    return false;
+  }
+}
+
 const port = Number(process.env.PORT ?? 3000);
 if (!Number.isInteger(port) || port < 1 || port > 65_535) {
   problems.push("PORT must be a whole number between 1 and 65535.");
 } else {
-  await new Promise((done) => {
+  const portTaken = await new Promise((done) => {
     const server = net.createServer();
-    server.once("error", () => {
-      problems.push(
-        `Port ${port} is already in use. Stop the other app or set PORT to another value.`,
-      );
-      done();
-    });
-    server.listen(port, "127.0.0.1", () => {
-      server.close(() => {
-        notes.push(`Port ${port} is available`);
-        done();
-      });
-    });
+    server.once("error", () => done(true));
+    server.listen(port, "127.0.0.1", () => server.close(() => done(false)));
   });
+
+  if (!portTaken) {
+    notes.push(`Port ${port} is available`);
+  } else if (await thisAppIsListening(port)) {
+    // Running `npm run doctor` while the app is up is the normal case, not a
+    // conflict. Reporting it as a problem sends people hunting for a clash
+    // with their own dev server.
+    notes.push(`Port ${port} is in use by this app, which is already running`);
+  } else {
+    problems.push(
+      `Port ${port} is already in use by something else. Stop it, or set PORT to another value.`,
+    );
+  }
 }
 
 for (const note of notes) console.log(`✓ ${note}`);
