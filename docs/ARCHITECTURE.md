@@ -18,6 +18,7 @@ This shape minimizes duplicated client/server contracts and works both on a lapt
 - Raw, parameterized SQL and checked-in migrations keep the data model visible. An ORM is not needed for this scale.
 - SQLite is correct for one running application instance. Move to Postgres only when concurrent instances, external reporting, or a separate web client creates a real need.
 - Tailwind supplies design tokens and layout utilities. A curated shadcn/ui layer supplies source-owned primitives configured in `components.json`; add official components only as a feature needs them.
+- A Content-Security-Policy is emitted in production and deliberately switched off on the dev server, by the `hawk-csp-off-in-dev` integration in `astro.config.mjs`. Astro computes the sha256 hashes that let a policy permit inline `<style>`/`<script>` blocks only at build time, while the dev server injects Tailwind's stylesheet inline for hot-reload. Setting a plain `csp: true` therefore blocks every stylesheet in dev and the app renders as unstyled text, even though `npm run check` and the browser tests -- which both run production builds -- pass. `npm run check:render` guards against this.
 - Authentication is not embedded. Hawk Suite will terminate public access and provide a documented identity contract. Authorization still belongs in server actions and routes.
 
 ## Adding a feature
