@@ -9,7 +9,7 @@ Help a small team track internal projects without a spreadsheet.
 ## People who use it
 
 - Team members create and update projects.
-- The Hawk Suite proxy will eventually identify signed-in people. Local development has no authentication.
+- The sample has no authentication. Choose public access, a deployment-level login gate, or user-aware access only as the actual application requires.
 
 ## Essential tasks
 
@@ -38,4 +38,4 @@ A new user can complete the essential tasks without instructions, and an operato
 ## Open questions
 
 - What should replace the sample project feature?
-- Which Hawk Suite roles may view or change each kind of record?
+- Does this app need authentication at all? If so, is a deployment-level login gate enough, or must the app identify users and enforce permissions?

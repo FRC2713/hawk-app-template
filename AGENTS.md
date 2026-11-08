@@ -20,7 +20,8 @@ This repository is intentionally narrow. Preserve its simplicity for a novice op
 - Change the schema only by adding an ordered `migrations/NNNN_name.sql` file. Never edit an applied migration.
 - Store durable state beneath `DATA_DIR`; production mounts it at `/data`.
 - Do not add an ORM, client state library, auth provider, queue, or cloud database without a concrete requirement and an approved architecture change.
-- Hawk Suite authentication is outside this app. When its identity-header contract is available, implement one narrow trusted-proxy adapter and authorize server-side; never trust a browser-supplied identity header directly.
+- Authentication is optional. Keep the template unauthenticated unless APP_BRIEF.md or the user requires access control; do not add login, roles, sessions, or auth dependencies just because the app uses Hawk branding or runs in Hawk Suite.
+- If Suite identity is needed, follow the optional trusted-proxy contract in docs/DEPLOYMENT.md. Use one narrow server adapter and enforce applicable permissions in routes/actions. Never trust identity headers on a directly reachable app; gateway membership alone is not an admin grant.
 
 ## File map
 

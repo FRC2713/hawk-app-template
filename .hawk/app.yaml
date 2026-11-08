@@ -7,8 +7,9 @@ healthPath: /health
 hostname: app-template
 replicas: 1
 auth:
-  mode: hawk-suite-proxy
-  identityContract: required-before-enabling-authorization
+  # No authentication is the sample default, not a requirement for derived apps.
+  # Choose hawk-suite-proxy only when the application needs the Suite login gate.
+  mode: none
 persistence:
   - name: data
     mountPath: /data
